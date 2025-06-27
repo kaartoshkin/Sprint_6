@@ -30,6 +30,8 @@ class TestOrderSucces:
 
         self.order_page.click_status_check_button()
 
+        assert self.order_page.order_success_message.is_displayed
+
         self.home_page.click_scooter_logo()  
         
         assert self.driver.current_url == self.home_page.base_url 
@@ -43,9 +45,11 @@ class TestOrderSucces:
 
         self.order_page.click_status_check_button()
 
+        assert self.order_page.order_success_message.is_displayed
+
         self.home_page.click_scooter_logo()  
         
-        assert self.driver.current_url == self.home_page.base_url 
+        assert self.base_page.get_current_url == self.home_page.base_url 
 
     @allure.title('Тест перехода на дзен')
     def test_logo_redirect(self):

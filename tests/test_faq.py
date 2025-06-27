@@ -3,15 +3,15 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-from page_objects.home_page import HomePageScooter
-from page_objects.base_page import BasePageScooter
+from home_page import HomePageScooter
+from tests.page_objects.base_page import BasePageScooter
 from data import FaqText
 
 class TestFaqList:
     
     @pytest.fixture(autouse=True)
     def setup(self):
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Firefox()
         self.base_page = BasePageScooter(self.driver)
         self.home_page = HomePageScooter(self.driver)
         self.base_page.open()
@@ -33,16 +33,12 @@ class TestFaqList:
         ]
     )
     def test_faq_correct_text(self, faq_number, expected_text):
-        click_FAQ_name = f"click_FAQ_{faq_number}"
-        check_FAQ_name = f"check_FAQ_{faq_number}"
-        
-        click_FAQ = getattr(self.home_page, click_FAQ_name)
-        check_FAQ = getattr(self.home_page, check_FAQ_name)
-        
-        click_FAQ()
-        faq_text = check_FAQ()
-        
-        assert faq_text == expected_text
+
+        self.home_page.click_FAQ(faq_number)
+        self.home_page.wait_for_load_FAQ(faq_number)
+        actual_text = self.home_page.check_FAQ(faq_number)
+
+        assert actual_text == expected_text
 
     @classmethod
     def teardown_class(cls):

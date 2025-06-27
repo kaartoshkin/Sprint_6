@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
+from tests.page_objects.base_page import BasePageScooter
 
 class HomePageScooter:
     scooter_logo = [By.XPATH, '//a[@class="Header_LogoScooter__3lsAR"]']
@@ -32,128 +33,48 @@ class HomePageScooter:
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(self.driver, 3)
+        self.base_page = BasePageScooter(self.driver)
         
     @allure.step('Клик по верхней кнопке Заказать')    
     def click_upper_order_button(self):
-        self.driver.find_element(*self.upper_order_button).click()   
+        self.base_page.wait_and_click(*self.upper_order_button)  
 
     @allure.step('Клик по нижней кнопке Заказать')   
     def click_lower_order_button(self):
-        self.driver.find_element(*self.lower_order_button).click()   
+        self.base_page.wait_and_click(*self.lower_order_button)
 
     @allure.step('Скролл до вопросов')   
     def scroll_to_faq(self):
-        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+        self.base_page.scroll_to("window.scrollTo(0, document.body.scrollHeight)")
 
     @allure.step('Скролл до нижней кнопки Заказать')      
     def scroll_to_lower_button(self):
-        self.driver.execute_script("window.scrollTo(0, 2200)")
+        self.base_page.scroll_to("window.scrollTo(0, 2200)")
 
     @allure.step('Переход на главную')  
     def click_scooter_logo(self):    
-        scooter_logo_button = self.wait.until(expected_conditions.element_to_be_clickable(*self.scooter_logo))           
-        scooter_logo_button.click()  
+        self.base_page.wait_and_click(*self.scooter_logo)          
 
     @allure.step('Переход на дзен')  
     def click_yandex_logo(self):
-        self.driver.find_element(*self.yandex_logo).click()   
+        self.base_page.wait_and_click(*self.yandex_logo) 
 
     @allure.step('Ожидание загрузки')  
     def wait_for_url_to_change(self):
-        self.wait.until(expected_conditions.url_changes(self.driver.current_url))
+        self.base_page.url_wait_to_change(self.driver.current_url)
 
-    @allure.step('Вывод 1 вопроса')      
-    def click_FAQ_1(self):
-        self.driver.find_element(*self.FAQ_1).click()
+    @allure.step('Вывод {faq_number} вопроса')      
+    def click_FAQ(self, faq_number):
+        faq_locator = getattr(self, f'FAQ_{faq_number}')
+        self.base_page.wait_and_click(*faq_locator)
 
-    def wait_for_load_FAQ_1(self):
-        self.wait(self.driver, 3).until(expected_conditions.visibility_of_element_located(*self.FAQ_1))
+    @allure.step('Ожидание загрузки ответа на вопрос №{faq_number}')
+    def wait_for_load_FAQ(self, faq_number: int):
+        locator = getattr(self, f"FAQ_{faq_number}_text")
+        self.base_page.wait_for_load(locator)
 
-    @allure.step('Проверка 1 вопроса')    
-    def check_FAQ_1(self):
-        faq_text = self.driver.find_element(*self.FAQ_1_text)
-        return faq_text.text
-    
-    @allure.step('Вывод 2 вопроса')       
-    def click_FAQ_2(self):
-        self.driver.find_element(*self.FAQ_2).click()  
-
-    def wait_for_load_FAQ_2(self):
-        self.wait(self.driver, 3).until(expected_conditions.visibility_of_element_located(*self.FAQ_2))
-
-    @allure.step('Проверка 2 вопроса')    
-    def check_FAQ_2(self):
-        faq_text = self.driver.find_element(*self.FAQ_2_text)
-        return faq_text.text
-    
-    @allure.step('Вывод 3 вопроса')        
-    def click_FAQ_3(self):
-        self.driver.find_element(*self.FAQ_3).click()  
-
-    def wait_for_load_FAQ_3(self):
-        self.wait(self.driver, 3).until(expected_conditions.visibility_of_element_located(*self.FAQ_3))
-
-    @allure.step('Проверка 3 вопроса')    
-    def check_FAQ_3(self):
-        faq_text = self.driver.find_element(*self.FAQ_3_text)
-        return faq_text.text
-
-    @allure.step('Вывод 4 вопроса')     
-    def click_FAQ_4(self):
-        self.driver.find_element(*self.FAQ_4).click()   
-
-    def wait_for_load_FAQ_4(self):
-        self.wait(self.driver, 3).until(expected_conditions.visibility_of_element_located(*self.FAQ_4))
-
-    @allure.step('Проверка 4 вопроса')    
-    def check_FAQ_4(self):
-        faq_text = self.driver.find_element(*self.FAQ_4_text)
-        return faq_text.text
-
-    @allure.step('Вывод 5 вопроса')     
-    def click_FAQ_5(self):
-        self.driver.find_element(*self.FAQ_5).click()  
-
-    def wait_for_load_FAQ_5(self):
-        self.wait(self.driver, 3).until(expected_conditions.visibility_of_element_located(*self.FAQ_5))
-
-    @allure.step('Проверка 5 вопроса')    
-    def check_FAQ_5(self):
-        faq_text = self.driver.find_element(*self.FAQ_5_text)
-        return faq_text.text
-    
-    @allure.step('Вывод 6 вопроса')     
-    def click_FAQ_6(self):
-        self.driver.find_element(*self.FAQ_6).click()  
-
-    def wait_for_load_FAQ_6(self):
-        self.wait(self.driver, 3).until(expected_conditions.visibility_of_element_located(*self.FAQ_6))
-
-    @allure.step('Проверка 6 вопроса')    
-    def check_FAQ_6(self):
-        faq_text = self.driver.find_element(*self.FAQ_6_text)
-        return faq_text.text
-
-    @allure.step('Вывод 7 вопроса') 
-    def click_FAQ_7(self):
-        self.driver.find_element(*self.FAQ_7).click() 
-
-    def wait_for_load_FAQ_7(self):
-        self.wait(self.driver, 3).until(expected_conditions.visibility_of_element_located(*self.FAQ_7))
-
-    @allure.step('Проверка 7 вопроса')    
-    def check_FAQ_7(self):
-        faq_text = self.driver.find_element(*self.FAQ_7_text)
-        return faq_text.text
-    
-    @allure.step('Вывод 8 вопроса')        
-    def click_FAQ_8(self):
-        self.driver.find_element(*self.FAQ_8).click() 
-
-    def wait_for_load_FAQ_8(self):
-        self.wait(self.driver, 3).until(expected_conditions.visibility_of_element_located(*self.FAQ_8))
-
-    @allure.step('Проверка 8 вопроса')             
-    def check_FAQ_8(self):
-        faq_text = self.driver.find_element(*self.FAQ_8_text)
+    @allure.step('Проверка {faq_number} вопроса')    
+    def check_FAQ(self, faq_number):
+        text_locator = getattr(self, f'FAQ_{faq_number}_text')
+        faq_text = self.base_page.find_element_on_page(*text_locator)
         return faq_text.text

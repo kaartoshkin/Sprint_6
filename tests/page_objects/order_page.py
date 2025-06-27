@@ -30,34 +30,19 @@ class OrderPageScooter:
         self.wait = WebDriverWait(self.driver, 3)
 
     @allure.step('Ввод имени')
-    def set_name_1(self):
+    def set_name(self, data_source):
         name_field = self.wait.until(expected_conditions.element_to_be_clickable(self.name_input))
-        name_field.send_keys(OrderData.ORDER_DATA_1["name"])   
-
-    @allure.step('Ввод имени')
-    def set_name_2(self):
-        name_field = self.wait.until(expected_conditions.element_to_be_clickable(self.name_input))
-        name_field.send_keys(OrderData.ORDER_DATA_2["name"])  
+        name_field.send_keys(OrderData[data_source]["name"])   
 
     @allure.step('Ввод фамилии')
-    def set_surname_1(self):
+    def set_surname(self, data_source):
         surname_field = self.wait.until(expected_conditions.element_to_be_clickable(self.surname_input))
-        surname_field.send_keys(OrderData.ORDER_DATA_1["surname"])  
-
-    @allure.step('Ввод фамилии')
-    def set_surname_2(self):
-        surname_field = self.wait.until(expected_conditions.element_to_be_clickable(self.surname_input))
-        surname_field.send_keys(OrderData.ORDER_DATA_2["surname"])  
+        surname_field.send_keys(OrderData[data_source]["surname"])  
 
     @allure.step('Ввод адреса')
-    def set_address_1(self):
+    def set_address(self, data_source):
         address_field = self.wait.until(expected_conditions.element_to_be_clickable(self.address_input))
-        address_field.send_keys(OrderData.ORDER_DATA_1["address"])   
-
-    @allure.step('Ввод адреса')
-    def set_address_2(self):
-        address_field = self.wait.until(expected_conditions.element_to_be_clickable(self.address_input))
-        address_field.send_keys(OrderData.ORDER_DATA_2["address"])   
+        address_field.send_keys(OrderData[data_source]["address"])   
 
     @allure.step('Ввод станции метро')
     def set_subway_station(self):
@@ -66,14 +51,9 @@ class OrderPageScooter:
         subway_station.click()   
 
     @allure.step('Ввод телефона')
-    def set_phone_1(self):
+    def set_phone(self, data_source):
         phone_field = self.wait.until(expected_conditions.element_to_be_clickable(self.phone_input))
-        phone_field.send_keys(OrderData.ORDER_DATA_1["phone"])  
-
-    @allure.step('Ввод телефона')
-    def set_phone_2(self):
-        phone_field = self.wait.until(expected_conditions.element_to_be_clickable(self.phone_input))
-        phone_field.send_keys(OrderData.ORDER_DATA_2["phone"]) 
+        phone_field.send_keys(OrderData[data_source]["phone"])  
 
     @allure.step('Переход на следующую страницу')
     def click_next_step_button(self):
@@ -81,16 +61,10 @@ class OrderPageScooter:
         button.click()       
 
     @allure.step('Ввод даты доставки')
-    def set_delivery_date_1(self):
+    def set_delivery_date(self, data_source):
         deliver_date = self.wait.until(expected_conditions.element_to_be_clickable(self.delivery_date))
-        deliver_date.send_keys(OrderData.ORDER_DATA_1["delivery_date"])  
+        deliver_date.send_keys(OrderData[data_source]["delivery_date"])  
         deliver_date.send_keys(Keys.ENTER)      
-
-    @allure.step('Ввод даты доставки')
-    def set_delivery_date_2(self):
-        deliver_date = self.wait.until(expected_conditions.element_to_be_clickable(self.delivery_date))
-        deliver_date.send_keys(OrderData.ORDER_DATA_2["delivery_date"])  
-        deliver_date.send_keys(Keys.ENTER)  
 
     @allure.step('Ввод времени аренды')
     def set_rent_time(self):   
@@ -110,14 +84,9 @@ class OrderPageScooter:
         color_pickup_button.click()
 
     @allure.step('Сообщение для курьера')
-    def set_comm_for_courier_1(self):
+    def set_comm_for_courier(self, data_source):
         comm_for_courier = self.wait.until(expected_conditions.element_to_be_clickable(self.comm_for_courier))
-        comm_for_courier.send_keys(OrderData.ORDER_DATA_1["message"])           
-
-    @allure.step('Сообщение для курьера')
-    def set_comm_for_courier_2(self):
-        comm_for_courier = self.wait.until(expected_conditions.element_to_be_clickable(self.comm_for_courier))
-        comm_for_courier.send_keys(OrderData.ORDER_DATA_2["message"])  
+        comm_for_courier.send_keys(OrderData[data_source]["message"])           
 
     @allure.step('Подтверждение заказа')
     def click_confirm_order_button(self):
@@ -127,34 +96,39 @@ class OrderPageScooter:
     @allure.step('Проверка статуса')
     def click_status_check_button(self):
         status_check_button = self.wait.until(expected_conditions.element_to_be_clickable(self.status_check_button))           
-        status_check_button.click()        
+        status_check_button.click()   
+
+    @allure.step('Проверка успешного заказа')
+    def order_success_message(self):
+        order_success_message = self.wait.until(expected_conditions.visibility_of_element_located(self.order_success_header))
+        return order_success_message
 
     @allure.title('Проверка формы заказа с первым набором данных')
     def check_order_form_1(self):
-        self.set_name_1()
-        self.set_surname_1()
-        self.set_address_1()
+        self.set_name("ORDER_DATA_1")
+        self.set_surname("ORDER_DATA_1")
+        self.set_address("ORDER_DATA_1")
         self.set_subway_station()
-        self.set_phone_1()
+        self.set_phone("ORDER_DATA_1")
         self.click_next_step_button()
-        self.set_delivery_date_1()
+        self.set_delivery_date("ORDER_DATA_1")
         self.set_rent_time()
         self.set_color_1()
-        self.set_comm_for_courier_1()
+        self.set_comm_for_courier("ORDER_DATA_1")
         self.click_next_step_button()
         self.click_confirm_order_button()
 
     @allure.title('Проверка формы заказа со вторым набором данных')
     def check_order_form_2(self):
-        self.set_name_2()
-        self.set_surname_2()
-        self.set_address_2()
+        self.set_name("ORDER_DATA_2")
+        self.set_surname("ORDER_DATA_2")
+        self.set_address("ORDER_DATA_2")
         self.set_subway_station()
-        self.set_phone_2()
+        self.set_phone("ORDER_DATA_2")
         self.click_next_step_button()
-        self.set_delivery_date_2()
+        self.set_delivery_date("ORDER_DATA_2")
         self.set_rent_time()
         self.set_color_2()
-        self.set_comm_for_courier_2()
+        self.set_comm_for_courier("ORDER_DATA_2")
         self.click_next_step_button()
         self.click_confirm_order_button()        
