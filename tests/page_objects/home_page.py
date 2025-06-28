@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-from tests.page_objects.base_page import BasePageScooter
+from base_page import BasePageScooter
 
 class HomePageScooter:
     scooter_logo = [By.XPATH, '//a[@class="Header_LogoScooter__3lsAR"]']

@@ -3,21 +3,11 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-from home_page import HomePageScooter
-from tests.page_objects.base_page import BasePageScooter
+from page_objects.home_page import HomePageScooter
+from page_objects.base_page import BasePageScooter
 from data import FaqText
 
 class TestFaqList:
-    
-    @pytest.fixture(autouse=True)
-    def setup(self):
-        self.driver = webdriver.Firefox()
-        self.base_page = BasePageScooter(self.driver)
-        self.home_page = HomePageScooter(self.driver)
-        self.base_page.open()
-        self.home_page.scroll_to_faq()
-        yield self.driver, self.base_page, self.home_page
-        self.driver.quit()
 
     @pytest.mark.parametrize(
         "faq_number, expected_text",
@@ -39,7 +29,3 @@ class TestFaqList:
         actual_text = self.home_page.check_FAQ(faq_number)
 
         assert actual_text == expected_text
-
-    @classmethod
-    def teardown_class(cls):
-        cls.driver.quit()
