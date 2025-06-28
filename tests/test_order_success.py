@@ -6,27 +6,23 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys 
 from page_objects.home_page import HomePageScooter
-from page_objects.order_page import OrderPageScooter
+from page_objects.tst_order_page import OrderPageScooter
 from page_objects.base_page import BasePageScooter
+from data import OrderData
 
 class TestOrderSucces:
-    
-    @pytest.fixture(autouse=True)
-    def setup(self):
-        self.driver = webdriver.Firefox()
-        self.base_page = BasePageScooter(self.driver)
-        self.home_page = HomePageScooter(self.driver)
-        self.order_page = OrderPageScooter(self.driver)
-        self.base_page.open()
-        yield self.driver, self.base_page, self.home_page
-        self.driver.quit()
 
     @allure.title('Тест заказа через верхнюю кнопку')
     def test_order_with_upper_button(self):
 
         self.home_page.click_upper_order_button()
         
-        self.order_page.check_order_form_1()
+        self.order_page.check_order_form(OrderData.ORDER_DATA_1['name'], 
+                                        OrderData.ORDER_DATA_1['surname'], 
+                                        OrderData.ORDER_DATA_1['address'],
+                                        OrderData.ORDER_DATA_1['phone'],
+                                        OrderData.ORDER_DATA_1['delivery_date'],
+                                        OrderData.ORDER_DATA_1['message'])
 
         self.order_page.click_status_check_button()
 
@@ -41,7 +37,12 @@ class TestOrderSucces:
 
         self.home_page.click_upper_order_button()
         
-        self.order_page.check_order_form_2()
+        self.order_page.check_order_form(OrderData.ORDER_DATA_2['name'], 
+                                        OrderData.ORDER_DATA_2['surname'], 
+                                        OrderData.ORDER_DATA_2['address'],
+                                        OrderData.ORDER_DATA_2['phone'],
+                                        OrderData.ORDER_DATA_2['delivery_date'],
+                                        OrderData.ORDER_DATA_2['message'])
 
         self.order_page.click_status_check_button()
 
