@@ -5,57 +5,49 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys 
-from page_objects.home_page import HomePageScooter
-from page_objects.tst_order_page import OrderPageScooter
-from page_objects.base_page import BasePageScooter
+from pages.home_page import HomePageScooter
+from pages.base_page import BasePageScooter
+from pages.order_page import OrderPageScooter
 from data import OrderData
 
 class TestOrderSucces:
 
     @allure.title('Тест заказа через верхнюю кнопку')
-    def test_order_with_upper_button(self):
+    def test_order_with_upper_button(self, home_page, order_page, base_page):
 
-        self.home_page.click_upper_order_button()
+        home_page.click_upper_order_button()
         
-        self.order_page.check_order_form(OrderData.ORDER_DATA_1['name'], 
-                                        OrderData.ORDER_DATA_1['surname'], 
-                                        OrderData.ORDER_DATA_1['address'],
-                                        OrderData.ORDER_DATA_1['phone'],
-                                        OrderData.ORDER_DATA_1['delivery_date'],
-                                        OrderData.ORDER_DATA_1['message'])
+        order_page.check_order_form("ORDER_DATA_1")
 
-        self.order_page.click_status_check_button()
+        assert order_page.order_success_message().is_displayed()
 
-        assert self.order_page.order_success_message.is_displayed
+        order_page.click_status_check_button()
 
-        self.home_page.click_scooter_logo()  
+        home_page.click_scooter_logo()  
         
-        assert self.driver.current_url == self.home_page.base_url 
+        assert base_page.get_current_url() == base_page.base_url 
 
-    @allure.title('Тест заказа через нижнюю кнопку')
-    def test_order_with_lower_button(self):
+    @allure.title("Тест заказа через нижнюю кнопку")
+    def test_order_with_lower_button(self, home_page, order_page, base_page):
 
-        self.home_page.click_upper_order_button()
+        home_page.scroll_to_lower_button()
+
+        home_page.click_lower_order_button()
         
-        self.order_page.check_order_form(OrderData.ORDER_DATA_2['name'], 
-                                        OrderData.ORDER_DATA_2['surname'], 
-                                        OrderData.ORDER_DATA_2['address'],
-                                        OrderData.ORDER_DATA_2['phone'],
-                                        OrderData.ORDER_DATA_2['delivery_date'],
-                                        OrderData.ORDER_DATA_2['message'])
+        order_page.check_order_form("ORDER_DATA_2")
 
-        self.order_page.click_status_check_button()
+        assert order_page.order_success_message().is_displayed()
 
-        assert self.order_page.order_success_message.is_displayed
+        order_page.click_status_check_button()
 
-        self.home_page.click_scooter_logo()  
+        home_page.click_scooter_logo()  
         
-        assert self.base_page.get_current_url == self.home_page.base_url 
+        assert base_page.get_current_url() == base_page.base_url 
 
     @allure.title('Тест перехода на дзен')
-    def test_logo_redirect(self):
+    def test_logo_redirect(self, home_page, base_page):
 
-        self.home_page.click_yandex_logo()
-        self.home_page.wait_for_url_to_change
+        home_page.click_yandex_logo()
+        home_page.wait_for_url_to_change()
 
-        assert 'dzen.ru' in self.driver.current_url
+        assert 'dzen.ru' in base_page.get_current_url()

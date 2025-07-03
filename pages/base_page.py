@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
+from locators.home_page_locators import HomePageLocator
 
 class BasePageScooter:
     def __init__(self, driver):
